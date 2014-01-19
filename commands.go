@@ -9,14 +9,23 @@ import (
 	"strings"
 )
 
+/*
+Top level struct representing a PuppetDB commands payload object.
+
+It consists of:
+
+* command
+* version
+* payload
+
+Where payload contains a variable structure depending on the command itself.
+
+See here for more details on the protocol: http://docs.puppetlabs.com/puppetdb/latest/api/commands.html
+*/
 type PayloadObject struct {
 	Command string `json:"command"`
 	Version	int `json:"version"`
 	Payload	interface{} `json:"payload"`
-}
-
-type CommandObject struct {
-	Payload PayloadObject `json:"payload"`
 }
 
 type CommandResponse struct {
