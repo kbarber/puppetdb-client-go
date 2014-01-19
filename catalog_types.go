@@ -71,6 +71,11 @@ type CatalogResourceSpec struct {
 }
 
 /*
+A collection of catalog resources
+*/
+type CatalogResources []CatalogResource
+
+/*
 A catalog resource.
 
 More details here: http://docs.puppetlabs.com/puppetdb/latest/api/wire_format/catalog_format.html#data-type-resource

@@ -12,3 +12,14 @@ type FactsWireFormat struct {
 	// A map of fact key/value pairs
 	Values map[string]string `json:"values"`
 }
+
+/*
+Response for fact based query end-points.
+
+More details here: http://docs.puppetlabs.com/puppetdb/latest/api/query/v3/facts.html#get-v3facts
+*/
+type Fact struct {
+	Certname string `json:"certname"`
+	Name string `json:"name"`
+	Value string `json:"value"`
+}

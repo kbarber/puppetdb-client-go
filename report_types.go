@@ -34,3 +34,30 @@ type ResourceEvent struct {
 	Line int `json:"line"`
 	ContainmentPath []string `json:"containment-path"`
 }
+
+/*
+Response data structure for event-counts query end-point.
+
+More details here: http://docs.puppetlabs.com/puppetdb/latest/api/query/v3/event-counts.html#get-v3event-counts
+*/
+type EventCounts struct {
+	SubjectType string `json:"subject-type"`
+	Subject string `json:"subject"`
+	Failures string `json:"failures"`
+	Successes string `json:"successes"`
+	Noops string `json:"noops"`
+	Skips string `json:"skips"`
+}
+
+/*
+Response data structure for aggregate-event-counts query end-points.
+
+More detail here: http://docs.puppetlabs.com/puppetdb/1.6/api/query/v3/aggregate-event-counts.html#get-v3aggregate-event-counts
+*/
+type AggregateEventCounts struct {
+	Failures string `json:"failures"`
+	Successes string `json:"successes"`
+	Noops string `json:"noops"`
+	Skips string `json:"skips"`
+	Total string `json:"total"`
+}
