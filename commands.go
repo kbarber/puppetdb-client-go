@@ -81,3 +81,13 @@ func (server *Server) ReplaceCatalog(catalog CatalogWireFormat) CommandResponse 
 	commandResponse := server.SubmitCommand("replace catalog", 3, catalog)
 	return commandResponse
 }
+
+/*
+Submit a new 'store report' command to PuppetDB.
+
+More details here: http://docs.puppetlabs.com/puppetdb/1.6/api/commands.html#store-report-version-2
+*/
+func (server *Server) StoreReport(report ReportWireFormat) CommandResponse {
+	commandResponse := server.SubmitCommand("store report", 2, report)
+	return commandResponse
+}
