@@ -34,6 +34,6 @@ func main() {
 
 	// Store report
 	server := puppetdb.NewServer("http://localhost:8080/")
-	response := server.StoreReport(report)
+	response, _ := server.StoreReport(report)
 	fmt.Printf("UUID: %v\n", response.Uuid)
 }

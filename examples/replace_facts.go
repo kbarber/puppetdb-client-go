@@ -12,6 +12,6 @@ func main() {
 		"foo": "bar",
 	}
 
-	response := server.ReplaceFacts("foobar", facts)
+	response, _ := server.ReplaceFacts("foobar", facts)
 	fmt.Printf("UUID: %v\n", response.Uuid)
 }

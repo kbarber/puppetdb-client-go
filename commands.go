@@ -17,28 +17,43 @@ functions instead.
 
 More detail here: http://docs.puppetlabs.com/puppetdb/latest/api/commands.html
 */
-func (server *Server) SubmitCommand(command string, version int, payload interface{}) CommandResponse {
+func (server *Server) SubmitCommand(command string, version int, payload interface{}) (*CommandResponse, error) {
 	baseUrl := server.BaseUrl
 	commandsUrl := strings.Join([]string{baseUrl, "v3/commands"}, "")
 
 	commandObject := CommandObject{command, version, payload}
-	commandJson, _ := json.Marshal(commandObject)
+	commandJson, err := json.Marshal(commandObject)
+	if(err != nil) {
+		return nil, err
+	}
 
 	data := url.Values{}
 	data.Set("payload", string(commandJson[:]))
 
-	req, _ := http.NewRequest("POST", commandsUrl, bytes.NewBufferString(data.Encode()))
+	req, err := http.NewRequest("POST", commandsUrl, bytes.NewBufferString(data.Encode()))
+	if(err != nil) {
+		return nil, err
+	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; param=value")
 
 	client := &http.Client{}
-	resp, _ := client.Do(req)
+	resp, err := client.Do(req)
+	if(err != nil) {
+		return nil, err
+	}
 
-	bodyRC, _ := ioutil.ReadAll(resp.Body)
+	bodyRC, err := ioutil.ReadAll(resp.Body)
+	if(err != nil) {
+		return nil, err
+	}
 
 	var commandResponse CommandResponse
-	json.Unmarshal(bodyRC, &commandResponse)
+	err = json.Unmarshal(bodyRC, &commandResponse)
+	if(err != nil) {
+		return nil, err
+	}
 
-	return commandResponse
+	return &commandResponse, nil
 }
 
 /*
@@ -49,12 +64,15 @@ name and a map of facts (key/value pairs).
 
 More details here: http://docs.puppetlabs.com/puppetdb/latest/api/commands.html#replace-facts-version-1
 */
-func (server *Server) ReplaceFacts(certname string, facts map[string]string) CommandResponse {
+func (server *Server) ReplaceFacts(certname string, facts map[string]string) (*CommandResponse, error) {
         factsPayload := FactsWireFormat{certname, facts}
-	factsJson, _ := json.Marshal(factsPayload)
+	factsJson, err := json.Marshal(factsPayload)
+	if(err != nil) {
+		return nil, err
+	}
 
-	commandResponse := server.SubmitCommand("replace facts", 1, string(factsJson[:]))
-	return commandResponse
+	commandResponse, err := server.SubmitCommand("replace facts", 1, string(factsJson[:]))
+	return commandResponse, err
 }
 
 /*
@@ -65,11 +83,14 @@ name as an argument to indicate which node to deactivate.
 
 More details here: http://docs.puppetlabs.com/puppetdb/latest/api/commands.html#deactivate-node-version-1
 */
-func (server *Server) DeactivateNode(certname string) CommandResponse {
-	certnameJson, _ := json.Marshal(certname)
+func (server *Server) DeactivateNode(certname string) (*CommandResponse, error) {
+	certnameJson, err := json.Marshal(certname)
+	if(err != nil) {
+		return nil, err
+	}
 
-	commandResponse := server.SubmitCommand("deactivate node", 1, string(certnameJson[:]))
-	return commandResponse
+	commandResponse, err := server.SubmitCommand("deactivate node", 1, string(certnameJson[:]))
+	return commandResponse, err
 }
 
 /*
@@ -77,9 +98,9 @@ Submit a new 'replace catalog' command to PuppetDB.
 
 More details here: http://docs.puppetlabs.com/puppetdb/latest/api/commands.html#replace-catalog-version-3
 */
-func (server *Server) ReplaceCatalog(catalog CatalogWireFormat) CommandResponse {
-	commandResponse := server.SubmitCommand("replace catalog", 3, catalog)
-	return commandResponse
+func (server *Server) ReplaceCatalog(catalog CatalogWireFormat) (*CommandResponse, error) {
+	commandResponse, error := server.SubmitCommand("replace catalog", 3, catalog)
+	return commandResponse, error
 }
 
 /*
@@ -87,7 +108,7 @@ Submit a new 'store report' command to PuppetDB.
 
 More details here: http://docs.puppetlabs.com/puppetdb/1.6/api/commands.html#store-report-version-2
 */
-func (server *Server) StoreReport(report ReportWireFormat) CommandResponse {
-	commandResponse := server.SubmitCommand("store report", 2, report)
-	return commandResponse
+func (server *Server) StoreReport(report ReportWireFormat) (*CommandResponse, error) {
+	commandResponse, error := server.SubmitCommand("store report", 2, report)
+	return commandResponse, error
 }
